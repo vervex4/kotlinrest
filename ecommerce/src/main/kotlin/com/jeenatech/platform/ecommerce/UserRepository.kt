@@ -1,4 +1,5 @@
 package com.jeenatech.platform.ecommerce
 
-class UserRepository {
-}
+import org.springframework.data.repository.CrudRepository
+
+interface UserRepository : CrudRepository<User, Int>

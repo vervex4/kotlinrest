@@ -20,10 +20,26 @@ repositories {
 }
 
 dependencies {
+	val coroutinesversion = "1.7.1"
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
+	implementation("aws.sdk.kotlin:s3:1.0.0")
+	implementation("aws.sdk.kotlin:cognitoidentityprovider:1.0.0") {
+		exclude("com.squareup.okhttp3:okhttp")
+	}
+	implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.11")
+	implementation("aws.sdk.kotlin:cognitoidentity:1.0.0")
+	implementation("aws.sdk.kotlin:secretsmanager:1.0.0")
+	implementation("aws.smithy.kotlin:http-client-engine-okhttp:0.30.0")
+	implementation("aws.smithy.kotlin:http-client-engine-crt:0.30.0")
+	testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:$coroutinesversion")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutinesversion")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:$coroutinesversion")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-debug:$coroutinesversion")
 //	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
 

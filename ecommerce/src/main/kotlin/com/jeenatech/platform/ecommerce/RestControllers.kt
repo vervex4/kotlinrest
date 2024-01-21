@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/v1/articles")
-class ArticleController (val awsCognitoServiceClient : AwsCognitoServiceClient) {
+class ArticleController () {
     val numberOfThreads = 4 // Adjust as needed
     val threadPool = newFixedThreadPoolContext(numberOfThreads, "CustomThreadPool")
     val articles = mutableListOf(Article("My first work","This is content"))
@@ -18,25 +18,7 @@ class ArticleController (val awsCognitoServiceClient : AwsCognitoServiceClient) 
     @GetMapping
     fun articles() = articles
 
-    @PostMapping("/signup")
-    fun createUser(userSignUp: UserSignUp) {
-        try {
-            runBlocking {
-                repeat(1) {
-                    GlobalScope.launch(Dispatchers.Default ) {
-                        val result =awsCognitoServiceClient.signUp("sharmaji","Lauda@1234","shar.vikash@gmail.com")
-                        val dd = result;
-                    }
-                }
-            }
-        }
-        catch (e:Exception) {
 
-        }
-
-
-
-    }
 
 
 }

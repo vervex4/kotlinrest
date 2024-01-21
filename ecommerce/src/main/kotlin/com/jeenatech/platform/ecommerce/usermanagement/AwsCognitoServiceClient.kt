@@ -1,7 +1,8 @@
 package com.jeenatech.platform.ecommerce.usermanagement
 
-import aws.sdk.kotlin.services.cognitoidentityprovider.model.*
 import aws.sdk.kotlin.services.cognitoidentityprovider.CognitoIdentityProviderClient
+import aws.sdk.kotlin.services.cognitoidentityprovider.model.AttributeType
+import aws.sdk.kotlin.services.cognitoidentityprovider.model.SignUpRequest
 import org.springframework.stereotype.Service
 import java.io.UnsupportedEncodingException
 import java.nio.charset.StandardCharsets
@@ -18,8 +19,8 @@ class AwsCognitoServiceClient {
             value = emailVal
         }
 
-        val clientIdVal="5nimibbv5cfcenhgt3dga8bg4"
-        val secretKey="nhldbf33rvfjh06ret3b1o2024qrnslpbe6npust6nr84sqoklv"
+        val clientIdVal="5vnimibbv5cfcenhgt3dga8bg4"
+        val secretKey="nihldbf33rvfjh06ret3b1o2024qrnslpbe6npust6nr84sqoklv"
         val userAttrsList = mutableListOf<AttributeType>()
         userAttrsList.add(userAttrs)
         val secretVal = calculateSecretHash(clientIdVal, secretKey, userNameVal)
@@ -31,15 +32,11 @@ class AwsCognitoServiceClient {
             secretHash = secretVal
         }
 
-        try {
+
             CognitoIdentityProviderClient { region = "us-east-2" }.use { identityProviderClient ->
                 identityProviderClient.signUp(signUpRequest)
                 println("User has been signed up")
             }
-        }
-        catch (e:Exception) {
-            println("what went wrong bro!!!" + e.message)
-        }
 
 
     }

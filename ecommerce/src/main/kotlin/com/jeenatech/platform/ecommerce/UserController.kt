@@ -1,13 +1,15 @@
 package com.jeenatech.platform.ecommerce
 
-import org.springframework.beans.factory.annotation.Autowired
+import com.jeenatech.platform.ecommerce.usermanagement.AwsCognitoServiceClient
+import com.jeenatech.platform.ecommerce.usermanagement.model.UserSignUp
+import kotlinx.coroutines.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/users")
-class UserController(val userRepository: UserRepository){
+class UserController(val userRepository: UserRepository, val awsCognitoServiceClient: AwsCognitoServiceClient) {
 
     //get all users
     @GetMapping("")
@@ -19,6 +21,23 @@ class UserController(val userRepository: UserRepository){
     fun createUser(@RequestBody user: User): ResponseEntity<User> {
         val savedUser = userRepository.save(user)
         return ResponseEntity(savedUser, HttpStatus.CREATED)
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    @PostMapping("/signup")
+     fun createUser(userSignUp: UserSignUp): Any {
+        return try {
+            runBlocking {
+
+                GlobalScope.launch(Dispatchers.Default) {
+                    awsCognitoServiceClient.signUp(userSignUp.userName, userSignUp.password, userSignUp.emailId)
+                }
+            }
+            ResponseEntity.ok("User Created Successfully! ")
+        } catch (e: Exception) {
+            ResponseEntity.badRequest().body("Something is wrong")
+        }
+
     }
 
     //get user by id

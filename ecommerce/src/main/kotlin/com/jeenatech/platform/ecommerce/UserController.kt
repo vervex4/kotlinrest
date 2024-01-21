@@ -39,6 +39,22 @@ class UserController(val userRepository: UserRepository, val awsCognitoServiceCl
         }
 
     }
+    @OptIn(DelicateCoroutinesApi::class)
+    @PostMapping("/login")
+    fun loginUser(userSignUp: UserSignUp): Any {
+        return try {
+            runBlocking {
+
+                GlobalScope.launch(Dispatchers.Default) {
+                    ResponseEntity.ok( awsCognitoServiceClient.login (userSignUp.userName, userSignUp.password,))
+                }
+            }
+
+        } catch (e: Exception) {
+            ResponseEntity.badRequest().body("Something is wrong")
+        }
+
+    }
 
     //get user by id
     @GetMapping("/{id}")

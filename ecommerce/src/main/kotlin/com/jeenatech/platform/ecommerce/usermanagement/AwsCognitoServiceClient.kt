@@ -1,8 +1,8 @@
 package com.jeenatech.platform.ecommerce.usermanagement
 
+import aws.sdk.kotlin.runtime.client.AwsClientOption.Region
 import aws.sdk.kotlin.services.cognitoidentityprovider.CognitoIdentityProviderClient
-import aws.sdk.kotlin.services.cognitoidentityprovider.model.AttributeType
-import aws.sdk.kotlin.services.cognitoidentityprovider.model.SignUpRequest
+import aws.sdk.kotlin.services.cognitoidentityprovider.model.*
 import org.springframework.stereotype.Service
 import java.io.UnsupportedEncodingException
 import java.nio.charset.StandardCharsets
@@ -19,8 +19,9 @@ class AwsCognitoServiceClient {
             value = emailVal
         }
 
-        val clientIdVal="5vnimibbv5cfcenhgt3dga8bg4"
-        val secretKey="nihldbf33rvfjh06ret3b1o2024qrnslpbe6npust6nr84sqoklv"
+
+        val clientIdVal="5nimibbv5cfcenhgt3dga8bg4"
+        val secretKey="nhldbf33rvfjh06ret3b1o2024qrnslpbe6npust6nr84sqoklv"
         val userAttrsList = mutableListOf<AttributeType>()
         userAttrsList.add(userAttrs)
         val secretVal = calculateSecretHash(clientIdVal, secretKey, userNameVal)
@@ -38,6 +39,29 @@ class AwsCognitoServiceClient {
                 println("User has been signed up")
             }
 
+
+    }
+    suspend fun login(userNameVal: String, passwordVal: String): AuthenticationResultType? {
+        try {
+            val clientIdVal="5nimibbv5cfcenhgt3dga8bg4"
+            val secretKey="nhldbf33rvfjh06ret3b1o2024qrnslpbe6npust6nr84sqoklv"
+
+            val secretVal = calculateSecretHash(clientIdVal, secretKey, userNameVal)
+            val initiateAuthRequest = InitiateAuthRequest {
+                clientId= clientIdVal
+                authFlow= AuthFlowType.UserPasswordAuth
+                authParameters = mapOf("USERNAME" to userNameVal, "PASSWORD" to passwordVal)
+
+            }
+
+            val authResponse = CognitoIdentityProviderClient{region= "us-east-2"}.initiateAuth(initiateAuthRequest)
+
+            return authResponse.authenticationResult
+        }
+      catch (e:Exception) {
+
+          throw e
+      }
 
     }
     fun calculateSecretHash(userPoolClientId: String, userPoolClientSecret: String, userName: String): String {

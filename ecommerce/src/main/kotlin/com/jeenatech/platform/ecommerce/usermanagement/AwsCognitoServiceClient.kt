@@ -50,7 +50,7 @@ class AwsCognitoServiceClient {
             val initiateAuthRequest = InitiateAuthRequest {
                 clientId= clientIdVal
                 authFlow= AuthFlowType.UserPasswordAuth
-                authParameters = mapOf("USERNAME" to userNameVal, "PASSWORD" to passwordVal)
+                authParameters = mapOf("USERNAME" to userNameVal, "PASSWORD" to passwordVal, "SECRET_HASH" to secretVal)
 
             }
 

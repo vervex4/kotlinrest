@@ -1,5 +1,6 @@
 package com.jeenatech.platform.ecommerce
 
+import aws.sdk.kotlin.services.cognitoidentityprovider.model.InvalidPasswordException
 import com.jeenatech.platform.ecommerce.usermanagement.AwsCognitoServiceClient
 import com.jeenatech.platform.ecommerce.usermanagement.model.UserSignUp
 import kotlinx.coroutines.*
@@ -26,15 +27,19 @@ class UserController(val userRepository: UserRepository, val awsCognitoServiceCl
     @OptIn(DelicateCoroutinesApi::class)
     @PostMapping("/signup")
      fun createUser(userSignUp: UserSignUp): Any {
+        var responseEntity :ResponseEntity<String>
         return try {
             runBlocking {
 
                 GlobalScope.launch(Dispatchers.Default) {
-                    awsCognitoServiceClient.signUp(userSignUp.userName, userSignUp.password, userSignUp.emailId)
+                    responseEntity= awsCognitoServiceClient.signUp(userSignUp.userName, userSignUp.password, userSignUp.emailId)
                 }
             }
-            ResponseEntity.ok("User Created Successfully! ")
-        } catch (e: Exception) {
+
+        } catch (ez: InvalidPasswordException) {
+            ResponseEntity.badRequest().body(ez.message)
+        }
+        catch (e: Exception) {
             ResponseEntity.badRequest().body("Something is wrong")
         }
 
